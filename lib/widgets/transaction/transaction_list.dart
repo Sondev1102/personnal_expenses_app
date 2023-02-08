@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'package:personal_expenses_app/modals/transaction.dart';
 
 class TransactionList extends StatelessWidget {
   List<Transaction> transactionList;
+  Function removeTransaction;
 
-  TransactionList({required this.transactionList});
+  TransactionList(
+      {required this.transactionList, required this.removeTransaction});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 300,
+      height: 500,
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
         itemBuilder: ((context, index) {
@@ -22,14 +25,29 @@ class TransactionList extends StatelessWidget {
                 radius: 30,
                 child: FittedBox(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    child: Text('\$${tx.amount.toStringAsFixed(2)}'),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(
+                      '\$${tx.amount.toStringAsFixed(2)}',
+                      style: Theme.of(context).textTheme.displayMedium,
+                    ),
                   ),
                 ),
               ),
-              title: Text(tx.title),
-              subtitle: Text(DateFormat.yMMMd().format(tx.date)),
-              trailing: IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
+              title: Text(
+                tx.title,
+                style: Theme.of(context).textTheme.labelMedium,
+              ),
+              subtitle: Text(
+                DateFormat.yMMMEd().format(tx.date),
+                style: Theme.of(context).textTheme.labelSmall,
+              ),
+              trailing: IconButton(
+                onPressed: () => removeTransaction(tx.id),
+                icon: Icon(
+                  Icons.delete,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
             ),
           );
         }),
