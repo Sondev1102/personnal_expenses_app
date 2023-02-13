@@ -102,24 +102,40 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    final isLanscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
+    final appBar = AppBar(
+      title: const Text("Personal Expenses"),
+      actions: [
+        IconButton(
+          onPressed: () => _showBottomModal(context),
+          icon: Icon(Icons.add),
+        )
+      ],
+    );
+
+    final containerHeight = mediaQuery.size.height -
+        appBar.preferredSize.height -
+        mediaQuery.viewPadding.top;
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Personal Expenses"),
-        actions: [
-          IconButton(
-            onPressed: () => _showBottomModal(context),
-            icon: Icon(Icons.add),
-          )
-        ],
-      ),
+      appBar: appBar,
       body: Container(
         width: double.infinity,
         child: Column(
           children: [
-            Chart(_recentTransactions),
-            TransactionList(
-              transactionList: _userTransactions,
-              removeTransaction: _handleRemoveTransaction,
+            Container(
+              height: containerHeight * 0.3,
+              child: Chart(_recentTransactions),
+            ),
+            Container(
+              height: containerHeight * 0.7,
+              child: TransactionList(
+                transactionList: _userTransactions,
+                removeTransaction: _handleRemoveTransaction,
+              ),
             )
           ],
         ),
