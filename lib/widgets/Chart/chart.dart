@@ -27,70 +27,81 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 6,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: recentTransactionsGroupByDate
-              .map(
-                (day) => Flexible(
-                  fit: FlexFit.tight,
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 20,
-                        child: FittedBox(
-                          child: Text('\$' +
-                              (day['totalOfDay'] as double).toStringAsFixed(0)),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 6,
-                      ),
-                      Container(
-                        height: 100,
-                        width: 10,
-                        child: Stack(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.grey, width: 1),
-                                color: const Color.fromARGB(255, 212, 209, 209),
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                              ),
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      return Container(
+        margin: const EdgeInsets.only(left: 15, top: 10, right: 15),
+        child: Card(
+          elevation: 6,
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: recentTransactionsGroupByDate
+                  .map(
+                    (day) => Flexible(
+                      fit: FlexFit.tight,
+                      child: Column(
+                        children: [
+                          Container(
+                            height: constraints.maxHeight * 0.1,
+                            child: FittedBox(
+                              child: Text('\$' +
+                                  (day['totalOfDay'] as double)
+                                      .toStringAsFixed(0)),
                             ),
-                            FractionallySizedBox(
-                              heightFactor: totalOfWeek == 0
-                                  ? 0
-                                  : (day['totalOfDay'] as double) / totalOfWeek,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor,
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(10),
+                          ),
+                          SizedBox(
+                            height: constraints.maxHeight * 0.03,
+                          ),
+                          Container(
+                            height: constraints.maxHeight * 0.54,
+                            width: 10,
+                            child: Stack(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Colors.grey, width: 1),
+                                    color: const Color.fromARGB(
+                                        255, 212, 209, 209),
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            )
-                          ],
-                        ),
+                                FractionallySizedBox(
+                                  heightFactor: totalOfWeek == 0
+                                      ? 0
+                                      : (day['totalOfDay'] as double) /
+                                          totalOfWeek,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).primaryColor,
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                                top: constraints.maxHeight * 0.03),
+                            height: constraints.maxHeight * 0.1,
+                            child: Text(day['title'] as String),
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 6),
-                        child: Text(day['title'] as String),
-                      ),
-                    ],
-                  ),
-                ),
-              )
-              .toList(),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
