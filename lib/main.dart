@@ -109,6 +109,15 @@ class _HomeState extends State<Home> {
     });
   }
 
+  List<Widget> _buildLandscapeContents(Widget switchAdapter, Widget chart,
+      bool isShowChart, Widget transactionList) {
+    return [switchAdapter, if (isShowChart) chart, transactionList];
+  }
+
+  List<Widget> _buildPortraitContents(Widget chart, Widget transactionList) {
+    return [chart, transactionList];
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -132,7 +141,7 @@ class _HomeState extends State<Home> {
             actions: [
               IconButton(
                 onPressed: () => _showBottomModal(context),
-                icon: Icon(Icons.add),
+                icon: const Icon(Icons.add),
               )
             ],
           );
@@ -186,10 +195,10 @@ class _HomeState extends State<Home> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (isLandscape) switchAdapter,
-            if (!isLandscape) chart,
-            if (isLandscape && _isShowChart) chart,
-            transactionList
+            if (isLandscape)
+              ..._buildLandscapeContents(
+                  switchAdapter, chart, _isShowChart, transactionList),
+            if (!isLandscape) ..._buildPortraitContents(chart, transactionList),
           ],
         ),
       ),
@@ -197,15 +206,15 @@ class _HomeState extends State<Home> {
 
     return Platform.isIOS
         ? CupertinoPageScaffold(
-            child: pageBody,
             navigationBar: appBar as ObstructingPreferredSizeWidget,
+            child: pageBody,
           )
         : Scaffold(
             appBar: appBar,
             body: pageBody,
             floatingActionButton: FloatingActionButton(
               onPressed: () => _showBottomModal(context),
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerFloat,
